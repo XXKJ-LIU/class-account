@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>803班 · 竞赛账号查询</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --ink:#1b2140; --ink2:#5a6285; --line:#e3e8f5;
+    --brand:#3546b8; --brand2:#12b3a8; --bg:#f4f6fd; --card:#ffffff;
+  }
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:var(--ink); background:var(--bg);
+    background-image:
+      radial-gradient(900px 420px at 50% -180px,#dde4ff 0%,rgba(221,228,255,0) 70%),
+      linear-gradient(to right,rgba(53,70,184,.05) 1px,transparent 1px),
+      linear-gradient(to bottom,rgba(53,70,184,.05) 1px,transparent 1px);
+    background-size:auto,26px 26px,26px 26px;
+    min-height:100vh; display:flex; justify-content:center;
+    padding:28px 16px 40px;
+  }
+  .wrap{width:100%;max-width:430px}
+  header{text-align:center;margin-bottom:20px}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;letter-spacing:.08em;color:var(--brand);
+    background:rgba(53,70,184,.09);border:1px solid rgba(53,70,184,.18);
+    padding:5px 12px;border-radius:999px;font-weight:600;
+  }
+  .badge i{width:6px;height:6px;border-radius:50%;background:var(--brand2);display:block}
+  h1{font-size:24px;margin:14px 0 6px;letter-spacing:.02em}
+  .sub{margin:0;font-size:13.5px;color:var(--ink2);line-height:1.7}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:20px;box-shadow:0 10px 30px -18px rgba(27,33,64,.35);
+  }
+  label{display:block;font-size:13px;color:var(--ink2);margin-bottom:14px;font-weight:500}
+  input{
+    display:block;width:100%;margin-top:7px;padding:13px 14px;font-size:16px;
+    border:1.5px solid var(--line);border-radius:12px;background:#fbfcff;color:var(--ink);
+    outline:none;transition:.18s;font-family:inherit;
+  }
+  input:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(53,70,184,.10)}
+  button{
+    width:100%;padding:14px;font-size:16px;font-weight:600;color:#fff;font-family:inherit;
+    background:linear-gradient(135deg,#3546b8,#5a6bde);border:0;border-radius:12px;
+    cursor:pointer;transition:.18s;letter-spacing:.04em;
+  }
+  button:active{transform:translateY(1px)}
+  button[disabled]{opacity:.6;cursor:not-allowed}
+  .msg{margin:12px 0 0;font-size:13px;line-height:1.6;min-height:18px;color:#c0392b}
+  .msg.ok{color:var(--brand2)}
+  #result{margin-top:16px}
+  .who{font-size:13px;color:var(--ink2);margin:0 0 4px}
+  .who b{font-size:19px;color:var(--ink)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+       padding:14px 0;border-bottom:1px dashed var(--line)}
+  .row:last-of-type{border-bottom:0}
+  .k{font-size:12.5px;color:var(--ink2);flex:0 0 62px}
+  .v{flex:1;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+     font-size:15.5px;letter-spacing:.4px;word-break:break-all}
+  .mini{display:flex;gap:8px;flex:0 0 auto}
+  .mini button{
+    width:auto;padding:8px 12px;font-size:12.5px;font-weight:500;border-radius:9px;
+    background:rgba(53,70,184,.08);color:var(--brand);letter-spacing:0;
+  }
+  .mini button:active{background:rgba(53,70,184,.16)}
+  .tip{
+    margin-top:14px;padding:12px 14px;border-radius:12px;background:#f2fbfa;
+    border:1px solid #d6f0ed;font-size:12.5px;color:#2c6b66;line-height:1.7;
+  }
+  footer{margin-top:18px;text-align:center;font-size:11.5px;color:#9aa1bd;line-height:1.9}
+  .lock{text-align:center;padding:26px 0;font-size:13px;color:var(--ink2);line-height:1.9}
+  .spinner{
+    width:16px;height:16px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;
+    border-radius:50%;display:inline-block;vertical-align:-3px;margin-right:8px;
+    animation:sp .7s linear infinite;
+  }
+  @keyframes sp{to{transform:rotate(360deg)}}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge"><i></i>803 班 · Kitten 竞赛</span>
+    <h1>账号信息查询</h1>
+    <p class="sub">请输入孩子的姓名与证件号码后 6 位<br>查询结果仅显示您孩子的信息</p>
+  </header>
+
+  <form class="card" id="f" novalidate>
+    <label>学生姓名
+      <input id="name" type="text" inputmode="text" placeholder="请输入学生姓名" autocomplete="off">
+    </label>
+    <label>证件号码后 6 位
+      <input id="id6" type="text" inputmode="text" placeholder="6 位数字或字母" maxlength="32" autocomplete="off">
+    </label>
+    <button id="btn" type="submit">查 询</button>
+    <p class="msg" id="msg"></p>
+  </form>
+
+  <section class="card" id="result" hidden>
+    <p class="who">查到啦，<b id="rname">—</b> 的账号如下</p>
+    <div class="row">
+      <span class="k">账号</span>
+      <span class="v" id="racc">—</span>
+      <span class="mini"><button type="button" data-copy="racc">复制</button></span>
+    </div>
+    <div class="row">
+      <span class="k">初始密码</span>
+      <span class="v" id="rpwd">••••••</span>
+      <span class="mini">
+        <button type="button" id="eye">显示</button>
+        <button type="button" data-copy="rpwd">复制</button>
+      </span>
+    </div>
+    <div class="tip" id="tipBox"></div>
+  </section>
+
+  <div class="card" id="closed" hidden>
+    <div class="lock">本次查询已结束<br>如需查询，请联系班主任</div>
+  </div>
+
+  <footer>
+    本页面仅用于本次账号发放 · 请勿转发链接<br>
+    查询有疑问请联系班主任
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var ITER = 310000;
+  var GSALT = new Uint8Array([131,213,11,44,234,124,252,159,240,90,60,30,162,161,158,130,127,190,254,148,190,29,135,16,98,180,121,72,104,9,244,168]);
+  var DATA = [{"i":"feff031ab0d171c4","s":"9/7CGZk9KYkqlULjciqvwQ==","v":"z66zQs/asw0dZomG","c":"4qMnUM8qShONbYko1kLnyo4e7w/JWB+VPb6yievPF7nZFoPjDS3nzMkTjBFnynU/Bm+SapIuLqWwDP7JP+Txnngf"},{"i":"2c1880fac7b229ce","s":"lsHZMgerSLFWlvTcwXYXtw==","v":"HwWkNVB3RNAFk8R0","c":"Hp9HDT0sDEc07xIaoiMs7PPURCab5B/jmC28gixj+mS11DuNqDgm3iMrQrlUkF0ojk0qYNPpxeqv6FR+syx8ctIu"},{"i":"4cec8df8e4596cc9","s":"e0EBTFGai2+5wIrz2Xhz2w==","v":"6O/ZAZF0FQsU3NFS","c":"VM53OMOro1RU0uc82crOByK2lwKGy59h4uTsC+EgEjslR+hdsXpvkitjUKB4BeQetRT6mcrge7zR7pi2j3UNb5UX"},{"i":"59dd0c84ccebcb2f","s":"biIGmUp+cNPpkk/BlUllPg==","v":"cGYzg3JrAaJfjt/Q","c":"sc4JAYU+Vm6sKm9rnHR5QrsOF9/OA3PSjGAHMPqDw1XrTldyQlFVYn4WxRHLUpwkVFeXccBL3QGnwPe2cXmvQP+B"},{"i":"a99b71a4e9259a88","s":"wbu0gAZ4kwM40RiPxopkPQ==","v":"Li2WHHYgphyvnADV","c":"wviWpZUjayxS3iL2WYwQxyIAdVH0JMj5elYkOBNCIxrQ58YKl0e7uR29YKOh/zF6yhfamNYGpGTDfVSm3AhFS2tA"},{"i":"981297e8c96ac1d8","s":"HBGkXYFtprvEDsfK+jJ4BQ==","v":"57lYEOGM0jebugI8","c":"tqk2tJUiek4/Mp7Iyv+f8R74RKgwuBhXWqVJSJUTdhZCJJ3xzt/g9zQ/NqeICgl22YK0okyLA1Qgf5hhPMUtN8Qu"},{"i":"8997e82f6c58b736","s":"yBmPlSVytOryv42WQB8Yow==","v":"srv/yqHe51XmZJf5","c":"U0APf3aL1d0f4cZy3mH2NoXk2X2A8B7F6+OC5ojmXbqYOnGhnANrM4nVpbBtGISYjPgtCocFXxQpVW9wbESsEIb2"},{"i":"f2d67ee9d3a379af","s":"jS0K1fFwCFDoD/KSyt4gyA==","v":"hpbQUtTI/8QeERyB","c":"d4OeP0nNzg0oK2hi9oJ5iWOuXG5pfs3SVGWJXgjWgEi+UbRXCkEmSEjiE2nRrrM2BMPROMDAS3kBBCN5q8jZ2iSG"},{"i":"d82f3418185a83a2","s":"7jzLu2qQZYArRYKVPf9KYg==","v":"VcIFRaXTBJMnwfvU","c":"n3GLNjCNFyQ1U/oSiASd6vvPyGm6OencxTvrjzSod0CaIbwq78e6jtiMkDmSSBUCK87ajVgnxZU/1oFBZhpK9ZKQ"},{"i":"d5368dc05b29ce73","s":"h1zOWkNcSjCy+Z59l9U/+w==","v":"L093CP79wu19+YUN","c":"kFprtIW3qQVZQgG+uqnHp55937JlMnhdQMwCljVQz8+NvcC3bgMSvB4UZrOMyYInWjzm411UTPAQ8Lxzo9AvBwVI"},{"i":"fd1babe2b1f2ce96","s":"y/550ExBtdziwBBsFWL5oA==","v":"YOVunjX6NkOaaAm4","c":"/+2LhETVYCWe3+Ue96CVRfCwUN0sC4ZP/gs6S2c9yTzl6wSI8CZfCRFzsR2WBm9iOPbJqbf37Kr25sXOrH/NFAXF"},{"i":"579b63fe7cc439e7","s":"6mo2bpITKEOSjhCCINr9mA==","v":"RCO+ropbzKLOI9Bo","c":"pLs+15vCqJtRhruXryMfNTXwQ+n8OA6SSSd2wVCXN4ZmP5IZmrVFoFuAJKlaPN/wkJjiyED0KPoQFvfLIZ+OMMQr"},{"i":"a7c5b26b15ccff67","s":"lsOe9KMTzjBtiKge4J3MSw==","v":"EB7uk2/egj/haNjZ","c":"SCq3Np3yrO+lKC8huJw8efnWistQni0AF5KuT6r7on5K0ULbjOcA+tkjeDRWVi9nRAkMSzXPoraPqfk07iqBiSLL"},{"i":"55b0686f5514d986","s":"9+DbMfxQTWOPQtiPZgkJ3A==","v":"nmNWgbq+9NQs9wNQ","c":"/dMSpkAKCQFDCJkadEl3pdQzWYu/bIJ7GkTHBzlJ9WZmsJ9bmR3vnrIKtNZiLVuxlQKNQ91UFIzQswuOACEK1dwJ"},{"i":"8a5de4654a9ebb66","s":"rMPds5QqlGuUU5BVQSmnQQ==","v":"FhAONA0ESWVQaOv6","c":"WAa1agqLBQNyDgkRUWNzORp7/4G15Orze4lwybIv7VHa+55rWAE1JOu398kVlYmNXJa3iz2l3bxT9aI0PrwBK6Gy"},{"i":"8bc9f6f9eb552c19","s":"LQ6BTGr4xHjKIlh+lJlX7A==","v":"dmh+v7RsxtsdUP1B","c":"JQmq/L2DZAQpg8XQw2WQWbhv5OhTzJvgYF/sUehCRaOsEa0A44DSGddIQkptvzRsbAYG+jqwGqBoffi63/8/"},{"i":"59d3673507a426cc","s":"xkCs4914DTztGRl8Zeb6+w==","v":"Q8xbfIOhTt77Fu3V","c":"87Gqpm4NrM5Jx+sYm9dqaD/Zd/ExP83pfcnqSApSoiWkd3MXHcz4v1vJSOD+PjA1iQRJaN2gORYI+4uqHBFS+lQ9"},{"i":"c721640ff3f0a2dd","s":"fCItHMoB4MR8oAvc0BLN7Q==","v":"zMsxY8oWkb5quA82","c":"TPrEEiD/WxU/kRcuca3/12bO/rjaFlVrPMxJ3Dc9PFdpfUSvy1nOZ8X/nE+LYlcDRY1BigvURYSm1gugh3A/iRq9"},{"i":"85462c86635ef3e3","s":"aNhoeig6y45ua9714tFvYA==","v":"5sMNiVEU8nuZv80i","c":"H9aGrchqsKMEzvbvcEoEPHezMxqo15UghLhWWQRzt/Xv3l5C2Vqn9nvcywm5nZRpflYHzcmdBpNg8ynt3Q8j"},{"i":"5668ce0842ae8518","s":"mrvsSHSk5FWb3f0Sj4KQ4g==","v":"XedaQh+C3KscTsx+","c":"LqLaRDoha4+Ikg525yZrjzCbO8t/yR9MaUanyMFKNM7O2cpF2aa03CKKTJlXIidDaLEYMz0olF+NeFumWJLNn853"},{"i":"5fdaf1e5033a8814","s":"etoWnJYiVIZSLSldATDC9Q==","v":"GhzDZDx0YwfrlkXr","c":"yp//RjaRDdrVGepEDVMAbPS+1tg43/GelC0cdZBOK/0BUtiVHZhfhjkQmQ/+D+/Q0O0fdvp6642gi1XYu/3mqvkC"},{"i":"f56d2f2cef63ddec","s":"HwwAhBXc/PvmeArtOLkp8g==","v":"YeQVfZJmLkLVbT1U","c":"IFhF8Kp8Br5nq4NTt9wIlFAS/HQBHeOoEjRWpCMnGIdZoGoW5SaZbmRwhNVR9u3J3/6jSIQqzLg5Z+p8p9IhdVhS"},{"i":"f3352b60422a7a78","s":"WJPgU55k/YdT9gZdYNvM6Q==","v":"96BLaL+NXUa/kC+w","c":"808M1m1hPEEpO2Q5cM7XO3ZXxTPovIUpAt1HJre0OSMqCkuIwOUrrNhl8n+lYthAHpv9++TsKVw8HB5kyzvy2ji6"},{"i":"73b73a78e35dd7a3","s":"dIXKwOH2MqLNTUYCrVfxVg==","v":"78PpH7d3iczolg1V","c":"9b056QDGalW+GSFkjqFnRnSPXjy70Ww/O+gVFHB0s5itCoz+k1mHnt9i2lzyDXUU+hl0umvWwZgYHagVElnkjgET"},{"i":"f2ca86a80ef91a52","s":"p7HGPpDctySMZAX4E54l6Q==","v":"VWAIrrw0/cLxi3Aw","c":"W0XHbuSbUXTQqxEX+D4ooSDdoxCDbBwOAWIa8ZsVnHguU+jYRcHaFLCrhfzR0vOP5qtkKbzKKRorBhgkwVe0Y0d0"},{"i":"6f5e9db7d56c8057","s":"PD6rsgtxen5AziIupfhMfA==","v":"FGlby8VBMSwwcgJo","c":"6qs0K2p9eYQaEEKLKuTBqdtyLxb0ThX1YdCtsOV4zln1TEnWKZkgK7MtgEaM+sPdGNN/UEehkOtKbgV1YoyfUsDu"},{"i":"2facc27df1ace420","s":"kXUh7iZ2UV626jKV90p8Fw==","v":"M5hvM0aHtk3Pb120","c":"V4rnoUY7ungFgSeR3oYwBauaBadJw9CL8qNrfvS/GBEFleGXYZdWiXEKP5bsCPnD5vR4qWE306Sqdrev5OMMZIkC"},{"i":"3d897ddd43790991","s":"Pk40kTB6RucLkfIh7t1FLg==","v":"ijuop3y/LD5bTbsA","c":"3qEQ7E41PhZheeIbneaPf6643c+1e8OqkyyyVUEaC1+P0ZzkkE62o6+WdEe+jVCEngv8QbjEWj+Ily1KR5BKE2i4"}];
+  var END_TS = 1796227199000;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var msg = $('msg'), btn = $('btn'), result = $('result');
+  var last = 0, current = null, revealed = false;
+
+  function b64ToBytes(b64){
+    var bin = atob(b64), arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return arr;
+  }
+  function toHex(bytes){
+    var s = '';
+    for (var i = 0; i < bytes.length; i++) s += ('0' + bytes[i].toString(16)).slice(-2);
+    return s;
+  }
+  function normName(v){
+    return (v || '').replace(/[\s\u3000]/g, '').trim();
+  }
+  function normId(v){
+    return (v || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
+  }
+  function say(t, ok){
+    msg.textContent = t || '';
+    msg.className = 'msg' + (ok ? ' ok' : '');
+  }
+
+  function deriveKey(pass, saltBytes){
+    var enc = new TextEncoder();
+    return crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveBits'])
+      .then(function(base){
+        return crypto.subtle.deriveBits(
+          { name:'PBKDF2', salt: saltBytes, iterations: ITER, hash:'SHA-256' }, base, 256);
+      })
+      .then(function(bits){ return new Uint8Array(bits); });
+  }
+
+  function tryUnlock(name, id6){
+    var pass = name + '|' + id6;
+    return deriveKey(pass, GSALT).then(function(seed){
+      var idx = toHex(seed.slice(0, 8));
+      var hit = null;
+      for (var i = 0; i < DATA.length; i++){
+        if (DATA[i].i === idx){ hit = DATA[i]; break; }
+      }
+      if (!hit) return null;
+      return deriveKey(pass, b64ToBytes(hit.s)).then(function(k){
+        return crypto.subtle.importKey('raw', k, { name:'AES-GCM' }, false, ['decrypt'])
+          .then(function(aes){
+            return crypto.subtle.decrypt(
+              { name:'AES-GCM', iv: b64ToBytes(hit.v) }, aes, b64ToBytes(hit.c));
+          })
+          .then(function(buf){
+            return JSON.parse(new TextDecoder().decode(buf));
+          });
+      });
+    });
+  }
+
+  function render(rec){
+    current = rec;
+    revealed = true;
+    $('rname').textContent = rec.n;
+    $('racc').textContent = rec.a;
+    $('rpwd').textContent = rec.p;
+    $('eye').textContent = '隐藏';
+    var d = new Date(END_TS);
+    $('tipBox').innerHTML = '本页信息仅限家长本人查看，请勿截图外传。<br>查询通道开放至 ' +
+      d.getFullYear() + ' 年 ' + (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日。';
+    result.hidden = false;
+    say('');
+    result.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  $('f').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (Date.now() > END_TS){ $('closed').hidden = false; $('f').hidden = true; return; }
+
+    var name = normName($('name').value);
+    var id6 = normId($('id6').value);
+
+    if (!name){ say('请填写学生姓名'); return; }
+    if (id6.length < 6){ say('请填写证件号码后 6 位'); return; }
+    id6 = id6.slice(-6);
+
+    var now = Date.now();
+    if (now - last < 1500){ say('请稍候再试'); return; }
+    last = now;
+
+    if (!window.crypto || !window.crypto.subtle){
+      say('当前环境不支持加密查询，请通过 https 链接访问'); return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>正在校验…';
+    say('');
+    result.hidden = true;
+
+    tryUnlock(name, id6).then(function(rec){
+      if (rec){ render(rec); }
+      else { say('姓名或证件后 6 位不匹配，请核对后重试'); }
+    }).catch(function(err){
+      console.error(err);
+      say('查询出错了，请刷新页面重试');
+    }).then(function(){
+      btn.disabled = false;
+      btn.textContent = '查 询';
+    });
+  });
+
+  $('eye').addEventListener('click', function(){
+    if (!current) return;
+    revealed = !revealed;
+    $('rpwd').textContent = revealed ? current.p : '••••••';
+    this.textContent = revealed ? '隐藏' : '显示';
+  });
+
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t || !t.getAttribute) return;
+    var id = t.getAttribute('data-copy');
+    if (!id || !current) return;
+    var txt = id === 'racc' ? current.a : current.p;
+    var done = function(){ var o = t.textContent; t.textContent = '已复制'; setTimeout(function(){ t.textContent = o; }, 1200); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done).catch(function(){ fallback(txt, done); });
+    } else { fallback(txt, done); }
+  });
+
+  function fallback(txt, done){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  if (Date.now() > END_TS){
+    $('f').hidden = true; $('closed').hidden = false;
+  }
+})();
+</script>
+</body>
+</html>
